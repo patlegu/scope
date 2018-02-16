@@ -64,8 +64,6 @@ class App extends React.Component {
   constructor(props, context) {
     super(props, context);
 
-    this.props.dispatch(setMonitorState(this.props.monitor));
-
     this.setViewportDimensions = this.setViewportDimensions.bind(this);
     this.handleResize = debounce(this.setViewportDimensions, VIEWPORT_RESIZE_DEBOUNCE_INTERVAL);
 
@@ -183,6 +181,8 @@ class App extends React.Component {
       showingHelp, showingNetworkSelector, showingTroubleshootingMenu,
       timeTravelTransitioning, timeTravelSupported
     } = this.props;
+
+    this.props.dispatch(setMonitorState(this.props.monitor));
 
     const className = classNames('scope-app', { 'time-travel-open': timeTravelSupported });
     const isIframe = window !== window.top;
