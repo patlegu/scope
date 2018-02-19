@@ -4,6 +4,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/weaveworks/common/mtime"
 	"github.com/weaveworks/scope/probe/process"
 	"github.com/weaveworks/scope/report"
 )
@@ -114,9 +115,8 @@ func (t *Tagger) tag(tree process.Tree, topology *report.Topology) {
 			continue
 		}
 
-		node := report.MakeNodeWith(nodeID, map[string]string{
-			ContainerID: c.ID(),
-		}).WithParents(report.MakeSets().
+		node = node.WithLatest(ContainerID, mtime.Now(), c.ID())
+		node = node.WithParents(report.MakeSets().
 			Add(report.Container, report.MakeStringSet(report.MakeContainerNodeID(c.ID()))),
 		)
 
@@ -129,6 +129,6 @@ func (t *Tagger) tag(tree process.Tree, topology *report.Topology) {
 			)
 		}
 
-		topology.AddNode(node)
+		topology.ReplaceNode(node)
 	}
 }
